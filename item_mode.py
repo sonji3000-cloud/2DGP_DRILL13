@@ -1,10 +1,11 @@
 from pathlib import Path
 
-from pico2d import (SDL_QUIT, clear_canvas, get_canvas_height,
+from pico2d import (SDL_KEYDOWN, SDL_QUIT, SDLK_ESCAPE, clear_canvas, get_canvas_height,
                     get_canvas_width, get_events, load_font, load_image,
                     update_canvas)
 
 import game_framework
+import game_world
 
 image = None
 font = None
@@ -22,10 +23,15 @@ def finish():
     font = None
 
 
-def handle_events():
-    for event in get_events():
+def handle_events(events=None):
+    if events is None:
+        events = get_events()
+    for event in events:
         if event.type == SDL_QUIT:
             game_framework.quit()
+            return
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
+            game_framework.pop_mode()
             return
 
 
@@ -35,9 +41,12 @@ def update():
 
 def render():
     clear_canvas()
+    game_world.render()
     center_x = get_canvas_width() // 2
     center_y = get_canvas_height() // 2
     image.draw(center_x, center_y)
     font.draw(center_x - 130, center_y - 135,
               '0 / 1 / 2: coming soon', (255, 255, 255))
+    font.draw(center_x - 130, center_y - 160,
+              'Esc: cancel', (255, 255, 255))
     update_canvas()

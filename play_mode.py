@@ -1,6 +1,7 @@
 from pico2d import *
 import game_framework
 import game_world
+import item_mode
 import title_mode
 from boy import Boy
 from grass import Grass
@@ -29,12 +30,16 @@ def handle_events():
     global pause_key_down
 
     event_list = get_events()
-    for event in event_list:
+    for index, event in enumerate(event_list):
         if event.type == SDL_QUIT:
             game_framework.quit()
             return
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.change_mode(title_mode)
+            return
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_i:
+            game_framework.push_mode(item_mode)
+            item_mode.handle_events(event_list[index + 1:])
             return
         elif event.type == SDL_KEYDOWN and event.key == SDLK_p:
             if not pause_key_down:
@@ -64,6 +69,14 @@ def init():
     game_world.add_oject(boy)
 
 
+
+
+def pause():
+    pass
+
+
+def resume():
+    pass
 
 
 def update():
