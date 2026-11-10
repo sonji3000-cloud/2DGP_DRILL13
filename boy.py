@@ -18,6 +18,7 @@ class Boy:
         self.dir = 0
         self.face_dir = 1
         self.pressed_keys = set()
+        self.ball_type = 'SMALL'
 
         self.machine = Machine(
             model=self,
@@ -47,6 +48,8 @@ class Boy:
         self.frame = 0
 
     def fire_ball(self):
+        if self.ball_type != 'SMALL':
+            return
         ball = Ball(self.x, self.y, self.face_dir * 10)
         game_world.add_oject(ball)
 
