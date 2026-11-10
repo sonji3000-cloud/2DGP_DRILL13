@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from pico2d import (SDL_KEYDOWN, SDL_KEYUP, SDL_QUIT, SDLK_1, SDLK_ESCAPE,
+from pico2d import (SDL_KEYDOWN, SDL_KEYUP, SDL_QUIT, SDLK_0, SDLK_1, SDLK_ESCAPE,
                     clear_canvas, get_canvas_height, get_canvas_width,
                     get_events, load_font, load_image, update_canvas)
 
@@ -38,6 +38,9 @@ def handle_events(events=None):
         elif not return_to_play and event.type == SDL_KEYDOWN:
             if event.key == SDLK_ESCAPE:
                 return_to_play = True
+            elif event.key == SDLK_0:
+                play_mode.boy.ball_type = 'NONE'
+                return_to_play = True
             elif event.key == SDLK_1:
                 play_mode.boy.ball_type = 'SMALL'
                 return_to_play = True
@@ -58,9 +61,9 @@ def render():
     center_y = get_canvas_height() // 2
     image.draw(center_x, center_y)
     font.draw(center_x - 130, center_y - 135,
-              '1: small ball', (255, 255, 255))
+              '0: none / 1: small ball', (255, 255, 255))
     font.draw(center_x - 130, center_y - 160,
-              '0 / 2: coming soon', (255, 255, 255))
+              '2: coming soon', (255, 255, 255))
     font.draw(center_x - 130, center_y - 185,
               'Esc: cancel', (255, 255, 255))
     update_canvas()
