@@ -50,7 +50,7 @@ class Boy:
     def fire_ball(self):
         if self.ball_type == 'NONE':
             return
-        ball = Ball(self.x, self.y, self.face_dir * 10)
+        ball = Ball(self.x, self.y, self.face_dir * 10, self.ball_type)
         game_world.add_oject(ball)
 
     def handle_event(self, event):
