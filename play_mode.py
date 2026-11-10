@@ -10,6 +10,8 @@ paused = False
 pause_key_down = False
 pause_started_at = 0.0
 paused_key_releases = []
+item_started_at = 0.0
+item_key_releases = []
 
 
 def toggle_pause():
@@ -55,12 +57,14 @@ def handle_events():
 
 
 def init():
-    global boy, paused, pause_key_down, pause_started_at
+    global boy, paused, pause_key_down, pause_started_at, item_started_at
 
     paused = False
     pause_key_down = False
     pause_started_at = 0.0
     paused_key_releases.clear()
+    item_started_at = 0.0
+    item_key_releases.clear()
 
     grass = Grass()
     game_world.add_oject(grass, 0)
@@ -72,11 +76,28 @@ def init():
 
 
 def pause():
-    pass
+    global item_started_at
+    item_started_at = get_time()
+    item_key_releases.clear()
+
+
+def record_item_key_release(event):
+    global pause_key_down
+    if event.key == SDLK_p:
+        pause_key_down = False
+    elif event.key in (SDLK_LEFT, SDLK_RIGHT):
+        item_key_releases.append(event)
 
 
 def resume():
-    pass
+    if paused:
+        # P 정지 시간에 아이템 모드 시간도 포함되므로 중복 보정하지 않는다.
+        paused_key_releases.extend(item_key_releases)
+    else:
+        boy.idle_started_at += get_time() - item_started_at
+        for event in item_key_releases:
+            boy.handle_event(event)
+    item_key_releases.clear()
 
 
 def update():
@@ -96,5 +117,6 @@ def finish():
     paused = False
     pause_key_down = False
     paused_key_releases.clear()
+    item_key_releases.clear()
 
 
